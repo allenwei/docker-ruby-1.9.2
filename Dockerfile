@@ -1,5 +1,8 @@
 FROM buildpack-deps:wheezy
 
+ENV LC_ALL en_US.UTF-8
+ENV LANG en_US.UTF-8
+
 RUN apt-get update && apt-get install -y curl procps && rm -rf /var/lib/apt/lists/*
 
 ENV RUBY_MAJOR 1.9
