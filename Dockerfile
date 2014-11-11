@@ -1,9 +1,6 @@
 FROM buildpack-deps:wheezy
 
-ENV LC_ALL en_US.UTF-8
-ENV LANG en_US.UTF-8
-
-RUN apt-get update && apt-get install -y curl procps && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y curl procps locales-all && rm -rf /var/lib/apt/lists/*
 
 ENV RUBY_MAJOR 1.9
 ENV RUBY_VERSION 1.9.2-p330
@@ -27,10 +24,18 @@ RUN apt-get update \
 # skip installing gem documentation
 RUN echo 'gem: --no-rdoc --no-ri' >> "$HOME/.gemrc"
 
+
+ENV LANGUAGE en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
+
+RUN gem install bundler
+
 # install things globally, for great justice
 ENV GEM_HOME /usr/local/bundle
 ENV PATH $GEM_HOME/bin:$PATH
-RUN gem install bundler && bundle config --global path "$GEM_HOME" && bundle config --global bin "$GEM_HOME/bin"
+RUN bundle config --global path "$GEM_HOME"
+RUN bundle config --global bin "$GEM_HOME/bin"
 
 # don't create ".bundle" in all our apps
 ENV BUNDLE_APP_CONFIG $GEM_HOME
